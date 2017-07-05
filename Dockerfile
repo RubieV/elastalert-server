@@ -1,35 +1,30 @@
-FROM node:alpine
-MAINTAINER ObjectRocket <dev@objecrocket.com>
+FROM ubuntu:16.04
 
-EXPOSE 3030
-
-RUN apk add --update \
-    ca-certificates \
-    openssl-dev \
-    libffi-dev \
-    git \
-    python \
+# Install build dependencies.
+RUN apt-get update
+RUN apt-get -y install \
+    build-essential \
     python-dev \
-    py-pip \
-    py-setuptools \
-    build-base \
-    && rm -rf /var/cache/apk/*
+    python-pip \
+    ca-certificates \
+    git \
+    libffi-dev \
+    libssl-dev \
+    curl
 
-RUN git clone https://github.com/objectrocket/elastalert.git -b master --depth=1 /opt/elastalert
+# Install nodejs.
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN apt-get -y install nodejs
+
+# Cloning elastalert repository.
+RUN git clone https://github.com/mjflve/elastalert.git -b master --depth=1 /opt/elastalert
+
+# Build and install python dependencies.
 WORKDIR /opt/elastalert
 RUN mkdir server_data
 RUN python setup.py install
+
+# Copy elastalert-server and install nodejs dependencies.
 WORKDIR /opt/elastalert-server
 COPY . /opt/elastalert-server
-RUN chmod +x /opt/elastalert-server/wait-for
 RUN npm install --production --quiet
-COPY config/elastalert.yaml /opt/elastalert/config.yaml
-COPY config/elastalert-server.json config/config.json
-
-RUN apk del python-dev \
-    py-setuptools \
-    py-pip \
-    build-base \
-    git
-
-CMD ["npm", "start"]
