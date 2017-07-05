@@ -1,0 +1,15 @@
+version: '3'
+services:
+  elastalert:
+    build: .
+    ports:
+    - "3030:3030"
+    container_name: elastalert
+    volumes:
+    - ./config/elastalert.yaml:/opt/elastalert/config.yaml
+    - ./config/elastalert-server.json:/opt/elastalert-server/config/config.json
+    - ./rules:/opt/elastalert/rules
+    - ./server-data:/opt/elastalert/server_data
+    working_dir: /opt/elastalert-server
+    command: npm start
+    network_mode: host
