@@ -59,9 +59,6 @@ export default class ElastalertServer {
         self._express.set('server', self);
 
         self._fileSystemController = new FileSystem();
-        self._processController = new ProcessController();
-        self._processController.start();
-
         self._rulesController = new RulesController();
         self._testController = new TestController(self);
 
