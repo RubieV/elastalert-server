@@ -22,6 +22,9 @@ _Fish_
  docker run -ti -p 3030:3030 -v (pwd)/config/elastalert.yaml:/opt/elastalert/config.yaml -v (pwd)/config/elastalert-server.json:/opt/elastalert-server/config/config.json -v (pwd)/rules:/opt/elastalert/rules -v (pwd)/server-data:/opt/elastalert/server_data --net="host" elastalert:latest
 ```
 
+## Docker in Mac
+Edit `config/elastalert.yaml` and replace `es_host: localhost` by `es_host: docker.for.mac.localhost`. [Make sure to use Docker version 17.06 or up](https://docs.docker.com/docker-for-mac/networking/#there-is-no-docker0-bridge-on-macos). 
+
 ## Installation using npm and manual ElastAlert setup
 1. Clone the repository
     ```bash
